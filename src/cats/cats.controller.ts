@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, UseFilters } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseFilters,
+} from '@nestjs/common';
 import { ForbiddenException } from 'src/common/exception/forbidden.exception';
 import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
 import { CatsService } from './cats.service';
@@ -51,5 +59,15 @@ export class CatsController {
     //   cause: new Error(),
     //   description: 'Some error description',
     // });
+  }
+
+  @Get('/:id')
+  // 绑定管道
+  // 在方法参数级别绑定管道
+  async findOne(
+    @Param('id', ParseIntPipe)
+    id: number,
+  ) {
+    return id;
   }
 }
