@@ -6,16 +6,20 @@ import {
   ParseIntPipe,
   Post,
   UseFilters,
+  UseGuards,
 } from '@nestjs/common';
+import { Roles } from 'src/common/decorators/roles.decorator';
 import { ForbiddenException } from 'src/common/exception/forbidden.exception';
 import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { Cat } from './interfaces/cat.interface';
 
 // 将过滤器设置为控制器作用域
-@UseFilters(HttpExceptionFilter)
 @Controller('cats')
+@UseFilters(HttpExceptionFilter)
+@UseGuards(RolesGuard)
 export class CatsController {
   constructor(private catsService: CatsService) {}
 
@@ -24,6 +28,7 @@ export class CatsController {
   // 尽可能使用类而不是实例来应用过滤器。它减少了内存使用量，因为 Nest 可以轻松地在整个模块中重用同一类的实例。
   @UseFilters(HttpExceptionFilter)
   // @UseFilters(new HttpExceptionFilter())
+  @Roles(['admin'])
   async create(@Body() createCatDto: CreateCatDto) {
     this.catsService.create(createCatDto);
     throw new ForbiddenException();
