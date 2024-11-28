@@ -10,6 +10,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Roles } from 'src/common/decorators/roles.decorator';
+import { User } from 'src/common/decorators/user.decorator';
 import { ForbiddenException } from 'src/common/exception/forbidden.exception';
 import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
 import { RolesGuard } from 'src/common/guards/roles.guard';
@@ -81,7 +82,11 @@ export class CatsController {
   async findOne(
     @Param('id', ParseIntPipe)
     id: number,
+    @User('firstName') firstName: string,
   ) {
-    return id;
+    return {
+      id,
+      firstName,
+    };
   }
 }
