@@ -7,11 +7,15 @@ import {
   Post,
   UseFilters,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { ForbiddenException } from 'src/common/exception/forbidden.exception';
 import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
 import { RolesGuard } from 'src/common/guards/roles.guard';
+import { ExcludeNullInterceptor } from 'src/common/interceptors/excludeNull.interceptor';
+import { LoggingInterceptor } from 'src/common/interceptors/logging.interceptor';
+import { TransformInterceptor } from 'src/common/interceptors/transform.interceptor';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { Cat } from './interfaces/cat.interface';
@@ -20,6 +24,11 @@ import { Cat } from './interfaces/cat.interface';
 @Controller('cats')
 @UseFilters(HttpExceptionFilter)
 @UseGuards(RolesGuard)
+@UseInterceptors(
+  LoggingInterceptor,
+  TransformInterceptor,
+  ExcludeNullInterceptor,
+)
 export class CatsController {
   constructor(private catsService: CatsService) {}
 
